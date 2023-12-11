@@ -1,0 +1,126 @@
+
+#include <dht.h>
+#include <LiquidCrystal.h>
+
+
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+dht DHT;
+
+
+
+
+double temp;//Var Temperatura
+
+
+int Verde=6; //Pin 6
+int Amarillo=7;//Pin 7
+int Rojo=8;// Pin 8
+ 
+
+void setup()
+{
+  lcd.begin(16,2);
+  Serial.begin(9600);
+
+  pinMode(6,OUTPUT);   
+  pinMode(7,OUTPUT);    
+  pinMode(8,OUTPUT);  
+  pinMode(3,OUTPUT);  
+}
+
+void loop() 
+{  
+  DHT.read11(A1);
+
+  
+    Serial.print("Umidade = ");
+    Serial.print(DHT.humidity);
+    Serial.print(" %  ");
+
+Serial.print("Temperature = ");
+    Serial.print(DHT.temperature); 
+    Serial.println(" Celsius  ");
+
+  if (DHT.temperature < 21) digitalWrite(6,HIGH),delay(2000),digitalWrite(6,LOW),delay(20);
+  noTone(3);
+  
+  if (DHT.temperature < 21)
+  {
+    lcd.print("Estado>>>>");
+    delay(2000);
+    lcd.clear();
+    lcd.print("Normal>>>>");
+    delay(2000);
+    lcd.clear();
+    lcd.print("Temperatura");
+    delay(500);
+    lcd.setCursor(0,1); 
+    lcd.print("Ambiente:");
+    lcd.print(DHT.temperature);
+    lcd.write(B11011111); 
+    lcd.print("C");
+    delay(3000);
+    lcd.clear();
+    
+  }
+  
+  
+ if ((DHT.temperature >= 21 )&& (DHT.temperature < 41)) digitalWrite(7,HIGH),delay(2000), digitalWrite(7,LOW),delay(20);
+  noTone(3);													 
+  
+ if ((DHT.temperature >= 21 )&& (DHT.temperature < 41))
+   
+  {
+    lcd.print("Estado>>>>");
+    delay(2000);
+    lcd.clear();
+    lcd.print("Alerta>>>>");
+    delay(2000);
+    lcd.clear();
+    lcd.print("Temperatura");
+    delay(500);
+    lcd.setCursor(0,1); 
+    lcd.print("Ambiente:");
+    lcd.print(DHT.temperature);
+    lcd.write(B11011111);
+    lcd.print("C");
+    delay(3000);
+    lcd.clear();
+   }
+  
+ if(DHT.temperature >= 41) tone(3,650),digitalWrite(8,HIGH),delay(2000),digitalWrite(8,LOW),delay(20);
+  
+  
+ if ((DHT.temperature >= 41 ))
+  {
+    lcd.print("Perigo>>>>");
+    delay(2000);
+    lcd.clear();   
+    lcd.print("Temperatura");
+    delay(500);
+    lcd.setCursor(0,1);
+    lcd.print("Ambiente:");
+    delay(2000);
+    lcd.print(DHT.temperature);
+    lcd.write(B11011111); 
+    lcd.print("C");
+    delay(3000);
+    lcd.clear();  
+   }
+  
+  else 
+  {
+    noTone(3);	
+  }
+
+
+    lcd.setCursor(0,0); 
+    lcd.print("Umd. = ");
+    lcd.print(DHT.humidity);
+    lcd.print("%");
+    delay(3000);
+    lcd.clear();
+  
+  
+  
+}
